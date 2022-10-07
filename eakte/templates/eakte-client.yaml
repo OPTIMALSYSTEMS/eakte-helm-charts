@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{.Values.eakte.labels.app}}
+    name: eakte-client
+  name: eakte-client
+spec:
+  replicas: {{.Values.eakte.client.instances}}
+  selector:
+    matchLabels:
+      name: eakte-client
+  template:
+    metadata:
+      labels:
+        name: eakte-client
+    spec:
+      containers:
+      - image: "{{.Values.eakte.client.dockerRegistry}}:{{ .Values.eakte.client.tag }}"
+        imagePullPolicy: {{ .Values.eakte.image.imagePullPolicy }}
+        name: eakte-client
+        ports:
+        - containerPort: 80
+          protocol: TCP
+      imagePullSecrets:
+      - name: {{.Values.eakte.image.imagePullSecret }}
+      restartPolicy: Always

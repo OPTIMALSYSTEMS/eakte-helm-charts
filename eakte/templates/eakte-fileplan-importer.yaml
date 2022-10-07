@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{.Values.eakte.labels.app}}
+    name: eakte-fileplan-importer
+  name: eakte-fileplan-importer
+spec:
+  replicas: {{.Values.eakte.filePlanImporter.instances}}
+  selector:
+    matchLabels:
+      name: eakte-fileplan-importer
+  template:
+    metadata:
+      labels:
+        name: eakte-fileplan-importer
+    spec:
+      containers:
+      - image: "{{.Values.eakte.filePlanImporter.dockerRegistry}}:{{ .Values.eakte.filePlanImporter.tag }}"
+        imagePullPolicy: {{ .Values.eakte.image.imagePullPolicy }}
+        name: eakte-fileplan-importer
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+      imagePullSecrets:
+      - name: {{.Values.eakte.image.imagePullSecret }}
+      restartPolicy: Always

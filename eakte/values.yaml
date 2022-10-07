@@ -1,0 +1,146 @@
+imageCredentials:
+  dockeryuuvisorg:
+    registry: docker.yuuvis.org
+    username: changeme
+    password: changeme
+  
+redis:
+  fullnameOverride: redis
+  ## Cluster settings
+  architecture: standalone
+  auth:
+    enabled: false
+  master:
+    livenessProbe:
+      initialDelaySeconds: 600
+    persistence:
+      enabled: true
+      size: 512Mi
+      storageClass: default
+
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: changeme
+  primary:  
+    resources:
+      requests:
+        memory: 128Mi
+        cpu: 50m
+    initdb:
+      scriptsConfigMap: postgresql-initdb
+    persistence:
+      size: 500Mi
+
+yuuvis:
+  api:
+    url: "http://api.yuuvis/api"
+  configservice:
+    url: "http://configservice.yuuvis/config"
+
+nginx:
+  fullnameOverride: eakte
+  namespaceOverride: yuuvis
+  commonLabels:
+    yuuvis: "true"
+  replicaCount: 1
+  service:
+    type: ClusterIP
+  serverBlock: |-
+    server {
+        listen  8080;
+        client_max_body_size 4096M;
+        gzip on;
+        gzip_proxied any;
+        gzip_min_length 10240;
+        location / {
+            proxy_set_header X-Forwarded-Prefix /eakte;
+            proxy_set_header X-Forwarded-Host $host:$server_port;
+            proxy_set_header X-Forwarded-Server $host;
+            proxy_set_header X-Forwarded-Port 443;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_pass http://eakte-client.eakte;
+            proxy_redirect $scheme://$host:$server_port/ /eakte/;
+        }
+        location /api/v1/ {
+            proxy_set_header X-Forwarded-Prefix /eakte/api/v1;
+            proxy_set_header X-Forwarded-Host $host:$server_port;
+            proxy_set_header X-Forwarded-Server $host;
+            proxy_set_header X-Forwarded-Port 443;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_pass http://eakte-api.eakte/;
+            proxy_redirect $scheme://$host:$server_port/ /eakte/api/v1/;
+        }
+        location /api/v1/feedback {
+            proxy_set_header X-Forwarded-Prefix /eakte/api/v1/feedback;
+            proxy_set_header X-Forwarded-Host $host:$server_port;
+            proxy_set_header X-Forwarded-Server $host;
+            proxy_set_header X-Forwarded-Port 443;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_pass http://eakte-feedback.eakte/feedback;
+            proxy_redirect $scheme://$host:$server_port/ /eakte/api/v1/feedback;
+        }
+        location /viewer/ {
+            rewrite ^/viewer/(.*)$ https://$host:443/viewer/$1 permanent;
+        }
+        location /fileplan-importer-api/ {
+            proxy_pass http://eakte-fileplan-importer.eakte/;
+        }
+    }
+
+    
+eakte:
+  db:
+    user: eakte
+    password: changeme
+  image:
+    imagePullSecret: dockeryuuvisorg
+    imagePullPolicy: Always
+  labels:
+    app: eakte
+  api: 
+    dockerRegistry: docker.yuuvis.org/eakte/eakte-api
+    tag: 1.4.0
+    instances: 1
+    profiles: oauth2,eakte
+    java:
+      maxHeap: -Xmx2g -XX:MaxDirectMemorySize=1g -XX:+ExitOnOutOfMemoryError
+  client:
+    dockerRegistry: docker.yuuvis.org/eakte/eakte-client
+    tag: 1.4.0
+    instances: 1
+  feedback:
+    dockerRegistry: docker.yuuvis.org/eakte/eakte-feedback
+    tag: 0.0.13
+    instances: 1
+    credentials:
+        awsAccessKeyId: changeme
+        awsSecretAccessKey: changeme
+  webhook:
+    dockerRegistry: docker.yuuvis.org/eakte/eakte-webhook
+    tag: 1.4.0
+    instances: 1
+    profiles: eakte,oauth2,mq
+    java:
+      maxHeap: -Xmx128m -XX:+ExitOnOutOfMemoryError
+    redis:
+      host: "redis-master"
+      port: 6379
+    elasticsearch:
+        uri: "http://elasticsearch.infrastructure:9200"
+        endpoint: "elasticsearch.infrastructure"
+        index: eakte
+  filePlanImporter:
+    dockerRegistry: docker.yuuvis.org/eakte/eakte-fileplan-importer
+    tag: 0.0.2
+    instances: 1
+    profiles: prod,docker,kubernetes
+    java:
+      maxHeap: -Xmx128m -XX:+ExitOnOutOfMemoryError
+      

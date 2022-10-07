@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{.Values.eakte.labels.app}}
+    name: eakte-webhook
+  name: eakte-webhook
+spec:
+  replicas: {{.Values.eakte.webhook.instances}}
+  selector:
+    matchLabels:
+      name: eakte-webhook
+  template:
+    metadata:
+      labels:
+        name: eakte-webhook
+    spec:
+      initContainers:
+      - name: init-eakte-webhook
+        image: busybox
+        command: ["sh", "-c", "until wget -q --spider {{.Values.yuuvis.configservice.url}}/manage/health; do echo waiting for configservice; sleep 11; done;"]
+        imagePullPolicy: IfNotPresent
+      containers:
+      - name: eakte-webhook
+        image: "{{.Values.eakte.webhook.dockerRegistry}}:{{ .Values.eakte.webhook.tag }}"
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /manage/health
+            port: 8080
+          initialDelaySeconds: 600
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /manage/health
+            port: 8080
+          initialDelaySeconds: 0
+          periodSeconds: 5
+        env:
+        - name: JAVA_OPTS
+          value: {{.Values.eakte.webhook.java.maxHeap}}
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{.Values.eakte.webhook.profiles}}
+        - name: SPRING_CLOUD_CONFIG_URI
+          value: {{.Values.yuuvis.configservice.url}}
+        - name: logging.level.com.os.eakte
+          value: INFO
+        - name: momentum.api-url
+          value: {{.Values.yuuvis.api.url}}
+        - name: spring.redis.host
+          value: {{.Values.eakte.webhook.redis.host}}
+        - name: spring.redis.port
+          value: "{{.Values.eakte.webhook.redis.port}}"
+        - name: spring.data.elasticsearch.client.reactive.endpoints
+          value: {{.Values.eakte.webhook.elasticsearch.endpoint}}
+        - name: spring.elasticsearch.rest.uris
+          value: {{.Values.eakte.webhook.elasticsearch.uri}}
+        - name: eakte.elaticsearch.index
+          value: "{{.Values.eakte.webhook.elasticsearch.index}}"
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+      automountServiceAccountToken: false
+      imagePullSecrets:
+      - name: {{.Values.eakte.image.imagePullSecret}}

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{.Values.eakte.labels.app}}
+    name: eakte-api
+  name: eakte-api
+spec:
+  replicas: {{.Values.eakte.api.instances}}
+  selector:
+    matchLabels:
+      name: eakte-api
+  template:
+    metadata:
+      labels:
+        name: eakte-api
+    spec:
+      initContainers:
+      - name: init-eakte-api
+        image: busybox
+        command: ["sh", "-c", "until wget -q --spider {{.Values.yuuvis.configservice.url}}/manage/health; do echo waiting for configservice; sleep 11; done;"]
+        imagePullPolicy: IfNotPresent
+      containers:
+      - name: eakte-api
+        image: "{{.Values.eakte.api.dockerRegistry}}:{{ .Values.eakte.api.tag }}"
+        imagePullPolicy: {{ .Values.eakte.image.imagePullPolicy }}
+        livenessProbe:
+          httpGet:
+            path: /manage/health
+            port: 8080
+          initialDelaySeconds: 600
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /manage/health
+            port: 8080
+          initialDelaySeconds: 0
+          periodSeconds: 5
+        env:
+        - name: JAVA_OPTS
+          value: {{.Values.eakte.api.java.maxHeap}}
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{.Values.eakte.api.profiles}}
+        - name: SPRING_CLOUD_CONFIG_URI
+          value: {{.Values.yuuvis.configservice.url}}
+        - name: logging.level.com.os.eakte
+          value: INFO
+        - name: momentum.api-url
+          value: {{.Values.yuuvis.api.url}}
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+      automountServiceAccountToken: false
+      imagePullSecrets:
+      - name: {{.Values.eakte.image.imagePullSecret}}

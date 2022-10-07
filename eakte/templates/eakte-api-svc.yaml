@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{.Values.eakte.labels.app}}
+    name: eakte-api
+    yuuvis: "true"
+  name: eakte-api
+spec:
+  ports:
+  - name: "http"
+    port: 80
+    targetPort: 8080
+  selector:
+    name: eakte-api
+  type: ClusterIP
