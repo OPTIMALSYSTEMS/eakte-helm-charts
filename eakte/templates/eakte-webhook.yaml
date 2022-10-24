@@ -23,7 +23,7 @@ spec:
       containers:
       - name: eakte-webhook
         image: "{{.Values.eakte.webhook.dockerRegistry}}:{{ .Values.eakte.webhook.tag }}"
-        imagePullPolicy: Always
+        imagePullPolicy: {{ .Values.eakte.image.imagePullPolicy }}
         livenessProbe:
           httpGet:
             path: /manage/health
@@ -60,6 +60,14 @@ spec:
           value: "{{.Values.eakte.webhook.elasticsearch.index}}"
         ports:
         - containerPort: 8080
+      {{- if .Values.eakte.webhook.volumeMounts }}
+        volumeMounts:
+{{ tpl .Values.eakte.webhook.volumeMounts . | indent 8 }}
+      {{- end }}
+    {{- if .Values.eakte.webhook.volumes }}
+      volumes:
+{{ tpl .Values.eakte.webhook.volumes . | indent 6 }}
+    {{- end}}
       restartPolicy: Always
       automountServiceAccountToken: false
       imagePullSecrets:

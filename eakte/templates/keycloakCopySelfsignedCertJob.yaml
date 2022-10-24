@@ -1,0 +1,60 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: eakte-setup
+  labels:
+    app: {{.Values.eakte.labels.app}}
+  annotations:
+    "helm.sh/hook": "pre-install, pre-upgrade"
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      containers:
+      - name: setup-eakte
+        image: "{{.Values.eakte.schema.dockerRegistry}}:{{ .Values.eakte.schema.tag }}"
+        imagePullPolicy: Always
+        env:
+        - name: YUUVIS_NAMESPACE
+          value: {{.Values.yuuvis.namespace}}
+        - name: EAKTE_NAMESPACE
+          value: {{.Release.Namespace}}
+        - name: COPY_CUSTOM_CERT
+          value: {{ .Values.yuuvis.selfSignedCerts.copyToEAkte | quote}}
+        - name: CERT_SECRET_NAME
+          value: {{.Values.yuuvis.selfSignedCerts.secretName}}
+        - name: YUUVIS_ADMIN_TENANT
+          valueFrom:
+            secretKeyRef:
+              name: eakte-setup-secret
+              key: YUUVIS_ADMIN_TENANT
+        - name: YUUVIS_ADMIN_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: eakte-setup-secret
+              key: YUUVIS_ADMIN_USERNAME
+        - name: YUUVIS_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: eakte-setup-secret
+              key: YUUVIS_ADMIN_PASSWORD
+        - name: AMQP_URL
+          valueFrom:
+            secretKeyRef:
+              name: eakte-setup-secret
+              key: AMQP_URL
+        - name: AMQP_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: eakte-setup-secret
+              key: AMQP_USERNAME
+        - name: AMQP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: eakte-setup-secret
+              key: AMQP_PASSWORD
+      imagePullSecrets:
+      - name: {{.Values.eakte.image.imagePullSecret}}
+      serviceAccount: copy-selfsigned-cert
+      restartPolicy: OnFailure
