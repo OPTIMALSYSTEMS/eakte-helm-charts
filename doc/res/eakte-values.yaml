@@ -1,0 +1,45 @@
+imageCredentials:
+  dockeryuuvisorg:
+    registry: docker.yuuvis.org
+    username: 
+    password: 
+redis:
+  master:
+    persistence:
+      storageClass: managed-premium
+      
+postgresql:
+  auth:
+    postgresPassword: changeme
+  primary:  
+    persistence:
+      storageClass: managed-premium
+eakte:
+  db:
+    user: eakte
+    password: changeme
+eakte:
+  api: 
+    instances: 1
+  client:
+    instances: 1
+  feedback:
+    instances: 1
+    credentials:
+      accessKeyId: ""
+      secretAccessKey: ""
+  webhook:
+    instances: 1
+  filePlanImporter:
+    instances: 1
+
+yuuvis:
+  namespace: yuuvis
+  amqp:
+    url: rabbitmq.infrastructure:5672
+    username: rodger
+    password: changeme
+  systemAdmin:
+    tenant: changeme
+    username: changeme
+    password: changeme

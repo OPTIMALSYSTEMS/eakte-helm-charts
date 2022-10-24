@@ -50,6 +50,14 @@ spec:
           value: {{.Values.yuuvis.api.url}}
         ports:
         - containerPort: 8080
+      {{- if .Values.eakte.api.volumeMounts }}
+        volumeMounts:
+{{ tpl .Values.eakte.api.volumeMounts . | indent 8 }}
+      {{- end }}
+    {{- if .Values.eakte.api.volumes }}
+      volumes:
+{{ tpl .Values.eakte.api.volumes . | indent 6 }}
+    {{- end}}
       restartPolicy: Always
       automountServiceAccountToken: false
       imagePullSecrets:

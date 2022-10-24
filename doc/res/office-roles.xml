@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<roleSet xmlns="http://optimal-systems.org/ns/dmscloud/roleset/">
+    <role>
+        <name>EMBEDDEDOFFICE</name>
+        <permission>
+            <action>create</action>
+            <action>read</action>
+            <action>write</action>
+			<action>delete</action>
+			<condition>system:objectTypeId IN ('appEmbeddedoffice:Document', 'appEmbeddedoffice:Event')</condition>
+        </permission>
+    </role>
+</roleSet>
