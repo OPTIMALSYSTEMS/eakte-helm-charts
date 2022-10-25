@@ -7,7 +7,7 @@
 Hier findest du die nötigen Anleitungen, falls nicht alle Voraussetzungen erfüllt sind:
 
 *   [Keycloak installieren](https://help.optimal-systems.com/yuuvis_develop/display/YMY/Installing+and+Configuring+Keycloak+as+an+Identity+Provider)
-*   [Anlegen eines Mandanten inklusive Administratoren-Account](setup-tenant.md)
+*   [Anlegen eines Mandanten inklusive Administratoren-Account](setup-eakte-tenant.md)
 
   
 
