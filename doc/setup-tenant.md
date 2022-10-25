@@ -118,7 +118,7 @@ Es gibt drei Endpunkte um verschiedene Aktenplanformate zu importieren:
 
 Für den Import per xlsx soll folgende Struktur verwendet werden.
 
-[Aktenplan XLSX](/res/Aktenplan.xlsx)
+[Aktenplan XLSX](res/Aktenplan.xlsx)
 
 Alle Varianten erlauben folgende Request Parameter beim Call des Endpunktes:
 
