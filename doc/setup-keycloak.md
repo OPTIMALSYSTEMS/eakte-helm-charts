@@ -18,7 +18,7 @@ Hier findest du die nötigen Anleitungen, falls nicht alle Voraussetzungen erfü
       
     
 2.  Die Realms bilden die einzelnen Tenants (Mandanten) in der Administration Console ab. Wähle hier den richtigen Mandanten aus. In unserem Fall ist das **Kommunephoenix**. 
-![](/res/img/keycloak-select-realm.png)  
+![](res/img/keycloak-select-realm.png)  
     
 3.  Füge folgende Systemrollen hinzu, falls diese nicht automatisch durch das Tenant-Management angelegt wurden:
     *   `EAKTE_ADMIN`
@@ -35,21 +35,21 @@ Hier findest du die nötigen Anleitungen, falls nicht alle Voraussetzungen erfü
     *   `EAKTE_USER_WRITE`
     *   `EMBEDDEDOFFICE` (Wenn EmbeddedOffice benutzt wird)
     
-    ![](/res/img/keycloak-add-user-roles.jpg)
+    ![](res/img/keycloak-add-user-roles.jpg)
 
 5.  Erstelle einen User mit Systemadmin-Privilegien.
     1.  Lege einen neuen User an.  
           
-        ![](/res/img/keycloak-add-user-admin.jpg)
+        ![](res/img/keycloak-add-user-admin.jpg)
     2.  Gib dem Nutzer einen sprechenden Namen, z. B. `Systemadmin`. Klicke anschließend auf **Save**.  
         
-        ![](/res/img/keycloak-add-user-admin-details.jpg)
+        ![](res/img/keycloak-add-user-admin-details.jpg)
 
     3.  Füge dem neuem Nutzer folgende Rollen hinzu:
         *   `YUUVIS_TENANT_ADMIN` - Admin for own tenant in yuuvis
         *   `YUUVIS_SYSTEM_INTEGRATOR` - Admin for every tenant known to yuuvis   
         
-        ![](/res/img/keycloak-role-mapping.jpg)
+        ![](res/img/keycloak-role-mapping.jpg)
 
 ## Gruppen, Rollen (Berechtigungen) sowie User anlegen
 Für die **Kommunephoenix** benötigen wir weitere Rollen für die Erstellung der einzelnen Gruppen. Diese werden für das Berechtigungssystem gebraucht.

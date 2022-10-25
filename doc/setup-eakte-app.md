@@ -15,7 +15,7 @@ Einen Crosstenant User-Account einrichten im Master mit Rolle `EAKTE_ADMIN`:
 
 Zusätzlich muss folgender Service mit `kubectl apply -n yuuvis -f <path>` bereitgestellt werden
 
-[authentication-internal.yaml](/res/authentication-internal.yaml)
+[authentication-internal.yaml](res/authentication-internal.yaml)
 
 Das Konfigurations git (gitea) öffnen und eine leere application-eakte.yml unter yuuvis-config im Masterbranch anlegen und den im Crosstenant Schritt erstellten User unter service-user eintragen.
 
@@ -69,7 +69,7 @@ cd ..
 ```
 
 Beispiel Values File mit den wichtigsten Variablen, die im Helm Chart konfiguriert werden müssen:
-[eakte-values.yaml](/res/eakte-values.yaml)
+[eakte-values.yaml](res/eakte-values.yaml)
 
 E-Akte Values File anpassen changeme durch Passwort ersetzen
 
@@ -102,7 +102,7 @@ und darauf achten OnlyOffice und Dependencies wirklich in den namespace onlyoffi
 
 Folgendes Roleset in die embeddedoffice App installieren
 
-[office-roles.xml](/res/office-roles.xml)
+[office-roles.xml](res/office-roles.xml)
 
 Den OnlyOffice documentserver dabei mit folgenden Parametern konfigurieren
 
