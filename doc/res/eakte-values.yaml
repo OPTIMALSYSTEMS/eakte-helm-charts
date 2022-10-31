@@ -18,7 +18,6 @@ eakte:
   db:
     user: eakte
     password: changeme
-eakte:
   api: 
     instances: 1
   client:
