@@ -18,10 +18,6 @@ Zusätzlich muss folgender Service mit `kubectl apply -n yuuvis -f <path>` berei
 [authentication-internal.yaml](res/authentication-internal.yaml)
 
 Das Konfigurations git (gitea) öffnen und eine leere application-eakte.yml unter yuuvis-config im Masterbranch anlegen und den im Crosstenant Schritt erstellten User unter service-user eintragen.
-
-Neustarten des configservice im yuuvis namespace, damit dieser den aktuellen Config Stand mit dem Git synchronisiert.
-`kubectl -n yuuvis rollout restart sts configservice`
-
 ```yml
 momentum:
   service-user:
@@ -32,6 +28,10 @@ eakte:
   db:
     password: changeme
 ```
+Neustarten des configservice im yuuvis namespace, damit dieser den aktuellen Config Stand mit dem Git synchronisiert.
+`kubectl -n yuuvis rollout restart sts configservice`
+
+
 
 In der `authentication-prod.yaml`
 
