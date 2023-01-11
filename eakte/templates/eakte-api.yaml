@@ -48,6 +48,10 @@ spec:
           value: INFO
         - name: momentum.api-url
           value: {{.Values.yuuvis.api.url}}
+        - name: spring.elasticsearch.uris
+          value: {{.Values.eakte.webhook.elasticsearch.uri}}
+        - name: eakte.elaticsearch.index
+          value: "{{.Values.eakte.webhook.elasticsearch.index}}"
         ports:
         - containerPort: 8080
       {{- if .Values.eakte.api.volumeMounts }}

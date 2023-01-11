@@ -133,6 +133,9 @@ eakte:
     profiles: oauth2,eakte
     java:
       maxHeap: -Xmx2g -XX:MaxDirectMemorySize=1g -XX:+ExitOnOutOfMemoryError
+    elasticsearch:
+      uri: "http://elasticsearch.infrastructure:9200"
+      index: eakte
     volumes: |
         - name: keycloak-tls-selfsigned
           secret:
@@ -167,7 +170,6 @@ eakte:
       port: 6379
     elasticsearch:
         uri: "http://elasticsearch.infrastructure:9200"
-        endpoint: "elasticsearch.infrastructure"
         index: eakte
     volumes: |
         - name: keycloak-tls-selfsigned
