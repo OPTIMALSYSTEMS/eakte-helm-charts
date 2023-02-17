@@ -66,6 +66,7 @@ nginx:
         gzip on;
         gzip_proxied any;
         gzip_min_length 10240;
+        gzip_types *;
         location / {
             proxy_set_header X-Forwarded-Prefix /eakte;
             proxy_set_header X-Forwarded-Host $host:$server_port;
@@ -103,7 +104,15 @@ nginx:
             rewrite ^/viewer/(.*)$ https://$host:443/viewer/$1 permanent;
         }
         location /fileplan-importer-api/ {
+            proxy_set_header X-Forwarded-Prefix /eakte/fileplan-importer-api;
+            proxy_set_header X-Forwarded-Host $host:$server_port;
+            proxy_set_header X-Forwarded-Server $host;
+            proxy_set_header X-Forwarded-Port 443;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Real-IP $remote_addr;
             proxy_pass http://eakte-fileplan-importer.eakte/;
+            proxy_redirect $scheme://$host:$server_port/ /eakte/fileplan-importer-api/;
         }
     }
 
@@ -119,11 +128,14 @@ eakte:
     app: eakte
   api: 
     dockerRegistry: docker.yuuvis.org/eakte/eakte-api
-    tag: 1.4.1
+    tag: 1.5.0
     instances: 1
     profiles: oauth2,eakte
     java:
       maxHeap: -Xmx2g -XX:MaxDirectMemorySize=1g -XX:+ExitOnOutOfMemoryError
+    elasticsearch:
+      uri: "http://elasticsearch.infrastructure:9200"
+      index: eakte
     volumes: |
         - name: keycloak-tls-selfsigned
           secret:
@@ -134,11 +146,11 @@ eakte:
           name: keycloak-tls-selfsigned
   client:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-client
-    tag: 1.4.1
+    tag: 1.5.0
     instances: 1
   schema:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-schema
-    tag: 1.4.1
+    tag: 1.5.0
   feedback:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-feedback
     tag: 0.0.13
@@ -148,7 +160,7 @@ eakte:
         secretAccessKey: changeme
   webhook:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-webhook
-    tag: 1.4.0
+    tag: 1.5.0
     instances: 1
     profiles: eakte,oauth2,mq
     java:
@@ -158,7 +170,6 @@ eakte:
       port: 6379
     elasticsearch:
         uri: "http://elasticsearch.infrastructure:9200"
-        endpoint: "elasticsearch.infrastructure"
         index: eakte
     volumes: |
         - name: keycloak-tls-selfsigned
@@ -170,7 +181,7 @@ eakte:
           name: keycloak-tls-selfsigned
   filePlanImporter:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-fileplan-importer
-    tag: 0.0.2
+    tag: 1.4.2
     instances: 1
     profiles: prod,docker,kubernetes
     java:

@@ -52,9 +52,7 @@ spec:
           value: {{.Values.eakte.webhook.redis.host}}
         - name: spring.redis.port
           value: "{{.Values.eakte.webhook.redis.port}}"
-        - name: spring.data.elasticsearch.client.reactive.endpoints
-          value: {{.Values.eakte.webhook.elasticsearch.endpoint}}
-        - name: spring.elasticsearch.rest.uris
+        - name: spring.elasticsearch.uris
           value: {{.Values.eakte.webhook.elasticsearch.uri}}
         - name: eakte.elaticsearch.index
           value: "{{.Values.eakte.webhook.elasticsearch.index}}"
