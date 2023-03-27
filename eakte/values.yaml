@@ -128,7 +128,7 @@ eakte:
     app: eakte
   api: 
     dockerRegistry: docker.yuuvis.org/eakte/eakte-api
-    tag: 1.5.0
+    tag: 1.5.1
     instances: 1
     profiles: oauth2,eakte
     java:
@@ -146,11 +146,11 @@ eakte:
           name: keycloak-tls-selfsigned
   client:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-client
-    tag: 1.5.0
+    tag: 1.5.1
     instances: 1
   schema:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-schema
-    tag: 1.5.0
+    tag: 1.5.1
   feedback:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-feedback
     tag: 0.0.13
@@ -160,7 +160,7 @@ eakte:
         secretAccessKey: changeme
   webhook:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-webhook
-    tag: 1.5.0
+    tag: 1.5.1
     instances: 1
     profiles: eakte,oauth2,mq
     java:
