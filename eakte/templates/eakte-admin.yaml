@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{.Values.eakte.labels.app}}
+    name: eakte-admin
+  name: eakte-admin
+spec:
+  replicas: {{.Values.eakte.admin.instances}}
+  selector:
+    matchLabels:
+      name: eakte-admin
+  template:
+    metadata:
+      labels:
+        name: eakte-admin
+    spec:
+      initContainers:
+      - name: init-eakte-admin
+        image: busybox
+        command: ["sh", "-c", "until wget -q --spider {{.Values.yuuvis.configservice.url}}/manage/health; do echo waiting for configservice; sleep 11; done;"]
+        imagePullPolicy: IfNotPresent
+      containers:
+      - name: eakte-admin
+        image: "{{.Values.eakte.admin.dockerRegistry}}:{{ .Values.eakte.admin.tag }}"
+        imagePullPolicy: {{ .Values.eakte.image.imagePullPolicy }}
+#        livenessProbe:
+#          httpGet:
+#            path: /manage/health
+#            port: 8080
+#          initialDelaySeconds: 600
+#          periodSeconds: 10
+#          timeoutSeconds: 5
+#        readinessProbe:
+#          httpGet:
+#            path: /manage/health
+#            port: 8080
+#          initialDelaySeconds: 0
+#          periodSeconds: 5
+        ports:
+        - containerPort: 3000
+      restartPolicy: Always
+      automountServiceAccountToken: false
+      imagePullSecrets:
+      - name: {{.Values.eakte.image.imagePullSecret}}
