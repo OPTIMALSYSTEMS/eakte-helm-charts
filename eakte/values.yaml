@@ -100,6 +100,18 @@ nginx:
             proxy_pass http://eakte-feedback.eakte/feedback;
             proxy_redirect $scheme://$host:$server_port/ /eakte/api/v1/feedback;
         }
+        location /admin/ {
+            proxy_set_header X-Forwarded-Prefix /eakte/admin;
+            proxy_set_header X-Forwarded-Host $host:$server_port;
+            proxy_set_header X-Forwarded-Server $host;
+            proxy_set_header X-Forwarded-Port 443;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_read_timeout 24h;
+            proxy_pass http://eakte-admin.eakte/eakte/admin/;
+            proxy_set_header Host $host;
+        }
         location /viewer/ {
             rewrite ^/viewer/(.*)$ https://$host:443/viewer/$1 permanent;
         }
@@ -128,7 +140,7 @@ eakte:
     app: eakte
   api: 
     dockerRegistry: docker.yuuvis.org/eakte/eakte-api
-    tag: 1.5.0
+    tag: 1.5.2
     instances: 1
     profiles: oauth2,eakte
     java:
@@ -146,11 +158,11 @@ eakte:
           name: keycloak-tls-selfsigned
   client:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-client
-    tag: 1.5.0
+    tag: 1.5.2
     instances: 1
   schema:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-schema
-    tag: 1.5.0
+    tag: 1.5.2
   feedback:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-feedback
     tag: 0.0.13
@@ -160,7 +172,7 @@ eakte:
         secretAccessKey: changeme
   webhook:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-webhook
-    tag: 1.5.0
+    tag: 1.5.2
     instances: 1
     profiles: eakte,oauth2,mq
     java:
@@ -181,9 +193,12 @@ eakte:
           name: keycloak-tls-selfsigned
   filePlanImporter:
     dockerRegistry: docker.yuuvis.org/eakte/eakte-fileplan-importer
-    tag: 1.4.2
+    tag: 1.5.2
     instances: 1
     profiles: prod,docker,kubernetes
     java:
       maxHeap: -Xmx128m -XX:+ExitOnOutOfMemoryError
-      
+  admin: 
+    dockerRegistry: docker.yuuvis.org/eakte/eakte-admin
+    tag: 1.5.2
+    instances: 1
