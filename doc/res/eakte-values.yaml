@@ -1,5 +1,6 @@
 imageCredentials:
   dockeryuuvisorg:
+  # Credentials received from Optimal Systems
     registry: docker.yuuvis.org
     username: 
     password: 
@@ -10,12 +11,16 @@ redis:
       
 postgresql:
   auth:
+  # Choose a new password. 
+  # This password is not needed in the eakte installation
     postgresPassword: changeme
   primary:  
     persistence:
       storageClass: managed-premium
 eakte:
   db:
+    # user will be created in the postgresql database
+    # choose a new password
     user: eakte
     password: changeme
   api: 
@@ -25,6 +30,7 @@ eakte:
   feedback:
     instances: 1
     credentials:
+      # Credentials received from Optimal Systems
       accessKeyId: ""
       secretAccessKey: ""
   webhook:
@@ -35,9 +41,11 @@ eakte:
 yuuvis:
   namespace: yuuvis
   amqp:
+  # Credentials from the Yuuvis Infrastructure Installation
     url: rabbitmq.infrastructure:5672
     username: rodger
     password: changeme
+  # Credentials from an user with the role YUUVIS_SYSTEM_INTEGRATOR
   systemAdmin:
     tenant: changeme
     username: changeme
