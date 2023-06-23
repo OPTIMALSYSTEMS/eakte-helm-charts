@@ -1,88 +1,39 @@
 # Tenant einrichten
 ## Voraussetzung
 
-Momentum Installation inklusive Tenant Management
+Yuuvis Momentum Installation inklusive Tenant Management
 
-## Einmalig: Tenant Profil anlegen
-
-Um Tenants mit dem tenant-management erstellen zu können muss zuerst ein Profil angelegt werden.
-
-Ein Profil kann z.B. mit Hilfe der swaggerUi unter `/tenant-management/swagger-ui.html` mit `POST /tenant-management/api/system/profile` hinterlegt werden.
-
-Das Profil ist hier dokumentiert [https://help.optimal-systems.com/yuuvis\_develop/display/YMY/Tenant+Creation+Profile](https://help.optimal-systems.com/yuuvis_develop/display/YMY/Tenant+Creation+Profile).
-
-![](res/img/swagger-profile.png)
-
-**Beispiel Profil**
-
-```json
-{
-  "user": {
-    "withInvitation": false,
-    "users": [
-      {
-        "email": "changeme",
-        "firstName": "Tenant",
-        "lastName": "Admin",
-        "roles": [
-          "YUUVIS_TENANT_ADMIN",
-          "EAKTE_USER",
-          "EAKTE_USER_READ",
-          "EAKTE_USER_WRITE",
-          "EAKTE_ADMIN"
-        ],
-        "username": "tenantadmin",
-        "password": "changeme",
-        "enabled": true,
-        "createdTimestamp": 0,
-        "temporaryPassword": true
-      }
-    ]
-  },
-  "roles": [
-    {
-      "name": "EAKTE_ADMIN",
-      "description": "Enables to be admin for all eakte objects of the tenant"
-    },
-    {
-      "name": "EAKTE_USER",
-      "description": "Enables read access to the fileplan and tenant settings"
-    },
-    {
-      "name": "EAKTE_USER_READ",
-      "description": "Enables to search and read all permitted eakte objects of the tenant"
-    },
-    {
-      "name": "EAKTE_USER_WRITE",
-      "description": "Enables to write all permitted eakte objects of the tenant"
-    }
-  ],
-  "email": {
-    "host": "changeme",
-    "from": "changeme",
-    "username": "changeme",
-    "password": "changeme",
-    "fromDisplayName": "E-Akte Admin",
-    "port": 587,
-    "enableAuthentication": true,
-    "enableSSL": false,
-    "enableStartTLS": false
-  },
-  "general": {
-    "displayNameHTML": "<div class=\"yuv-brand-logo\">${DISPLAY_TENANT_NAME}</div>",
-    "defaultLocale": "de",
-    "supportedLocales": ["de", "en"]
-  }
-}
-```
+Für die EAkte ab Version 1.5.0 wird die Yuuvis Momentum Spring Version 2023 benötigt.
 
 ## Tenant erstellen
+Sobald ein Nutzer mit YUUVIS_SYSTEM_INTEGRATOR Rolle auf einem Mandanten erstellt ist, kann mithilfe des E-Akte Admin Tools ein neuer Tenant erstellt werden.
 
-Ein Tenant kann über das tenant-management mithilfe der `POST /tenant-management/api​/system​/tenants` Schnittstelle erstellt werden. Z.B. über die SwaggerUI unter `/tenant-management/swagger-ui.htm`l.
+Dafür kann das Admin Tool über den Pfad  `{eigenerLinkFürMomentum}/eakte/admin/` aufgerufen werden.
+![](res/img/admin-1.png)
 
-Die einzelnen Optionen und Schnittstellen eines Tenants sind hier dokumentiert: [https://help.optimal-systems.com/yuuvis\_develop/display/YMY/Tenant+Management+Endpoints](https://help.optimal-systems.com/yuuvis_develop/display/YMY/Tenant+Management+Endpoints)
+Unter dem Menüpunkt Mandanten kann ein neuer Mandant über den erstellen Button erstellt werden. In den sich öffnenden Dialog können die Einstellungen für den neuen Mandanten vorgenommen werden.
+![](res/img/admin-2.png)
 
-**E-Akte App aktivieren**
+Nach dem Klick auf Speichern wird nach kurzer Zeit eine Benachrichtung angezeigt, dass der Mandant erfolgreich erstellt wurde.
+
+Über den Dropdown oben rechts kann der neue Mandant ausgewählt werden.
+
+### Logo festlegen und weitere Einstellungen
+Im Menü links Einstellungen wählen. Im oberen Bereich können Logos hochgeladen werden. Bisher sollten die Logos in den Auflösungen 40x40 und 80x80 Pixel vorliegen.
+Das Logo in 40x40 muss später als 1x ausgewählt werden und das 80x80 Logo als 2x. Zukünftig wird ein Editor bereitgestellt der die Logos automatisch in den richtigen Auflösungen erzeugt.
+
+Über den Erstellen Button kann ein Logo hinzugefügt werden.
+
+In den Einstellungen können der Name des Mandanten, die Logos, Dokumententypen konfiguriert und die Integrationen aktiviert werden.
+
+Weiter unten kann die Sprache des Mandanten festgelegt werden. Diese Einstellung gilt für alle Nutzer des Mandanten.
+
+### Aktenplan importieren
+Im Menü links Aktenplan wählen. Im Aktenplaneditor kann über den Import Button ein bestehender Aktenplan im JSON oder ein anhand der XLSX Vorlage [Aktenplan XLSX](res/Aktenplan.xlsx) erstellter Aktenplan importiert werden.
+Danach kann der Aktenplan über den Button Speichern gespeichert werden.
+
+### E-Akte App aktivieren
+Dieser Schritt ist optional, da die App standardmäßig aktiviert ist und dies nur relavant ist falls man die verfügbaren Apps pro Tenant einschränken will.
 
 Nach der Erstellung des Tenants muss man sich als Nutzer mit `YUUVIS_TENANT_ADMIN` Rolle anmelden und die E-Akte App aktivieren.
 
@@ -108,7 +59,14 @@ Dies kann mithilfe von Postman geschehen.
 </apps>
 ```
 
-## Fileplan importieren
+## Alternative Konfiguration mittels API
+### Tenant erstellen
+
+Ein Tenant kann über das tenant-management mithilfe der `POST /tenant-management/api​/system​/tenants` Schnittstelle erstellt werden. Z.B. über die SwaggerUI unter `/tenant-management/swagger-ui.html`.
+
+Die einzelnen Optionen und Schnittstellen eines Tenants sind hier dokumentiert: [https://help.optimal-systems.com/yuuvis\_develop/display/YMY/Tenant+Management+Endpoints](https://help.optimal-systems.com/yuuvis_develop/display/YMY/Tenant+Management+Endpoints)
+
+### Fileplan importieren
 
 Es gibt drei Endpunkte um verschiedene Aktenplanformate zu importieren:
 
@@ -148,7 +106,7 @@ Dort klickt man bei der Schnittstelle POST /fileplan auf Try it out, ergänzt de
 
 ![](res/img/swagger-fileplan.png)
 
-## Name und Wappen des Mandanten konfigurieren
+### Name und Wappen des Mandanten konfigurieren
 
 Es gibt zwei Endpunkte um Namen und Wappen des Mandanten zu konfigurieren. Die Endpunkte können über die swagger-ui der E-Akte-API eingesehen werden `/eakte/api/v1/swagger-ui.html`:
 
@@ -168,6 +126,8 @@ Es gibt zwei Endpunkte um Namen und Wappen des Mandanten zu konfigurieren. Die E
 4.  Kann ich die Ablageebene nach der initialen Einstellung bearbeiten?
 5.  Was passiert mit meinen bestehenden Daten, wenn ich einen neuen Aktenplan importiere?
 
-1\. - 4.: Derzeit darf nur ein Aktenplan pro Mandant existieren.  Es ist nur möglich den vorhandenen Aktenplan zu entfernen und mit einem neuen Aktenplan zu ersetzen. Bearbeiten jeglicher Art kann nur am ursprünglichen Dokument des Aktenplans vorgenommen werden, worauf dieses dann an Stelle des vorhandenen Plans hochgeladen werden kann.
-
+1. Derzeit darf nur ein Aktenplan pro Mandant existieren.
+2. Ja über den Aktenplaneditor im Admintool ist dies möglich. Dabei sind die im Punkt 4 genannten Einschränkungen zu beachten.
+3. Ja über den Aktenplaneditor im Admintool ist dies möglich
+4. Ja über den Aktenplaneditor im Admintool ist dies möglich, allerdings führt ein ändern der Aktenplankennzeichen zu einem Verlust der Verknüpfung mit dem darin abgelegeten Daten. Diese können dann nur noch über die Suche gefunden werden und nicht über die Aktenplannavigation.
 5.: Derzeit wird keine Prüfung vorgenommen wenn sich der Aktenplan ändert. Die bestehenden Daten ändern sich also nicht. Dies kann dazu führen, dass vorhandene Akten nicht mehr per Navigation durch den Aktenplan gefunden werden, wenn sich das dazugehörige  Aktenplankennzeichen geändert hat. Über die normale Suche sollen aber alle Objekte weiter gefunden werden.
