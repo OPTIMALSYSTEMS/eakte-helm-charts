@@ -166,7 +166,12 @@ Die eakte unter routing.endpoints hinzufügen
 
 Zu `authorization.accesses` folgendes hinzufügen
 
-`- endpoints: /eakte/**`
+```yaml
+- endpoints: /eakte/admin/**
+  access: hasAnyAuthority('YUUVIS_SYSTEM_INTEGRATOR','YUUVIS_TENANT_ADMIN')
+- endpoints: /eakte/**
+
+```
 
 Bei `routing.defaultEntryPoint` /eakte/index.html setzen
 
