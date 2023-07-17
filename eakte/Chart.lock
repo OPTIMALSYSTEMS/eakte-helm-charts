@@ -4,9 +4,9 @@ dependencies:
   version: 16.13.2
 - name: nginx
   repository: https://charts.bitnami.com/bitnami
-  version: 13.2.31
+  version: 13.2.34
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 11.9.13
-digest: sha256:ce23d67c62eb1b038e919aba4a515a9eb9dc2d458b4c2ae5084a64e50acec005
-generated: "2023-03-28T10:24:07.2009904+02:00"
+digest: sha256:143f5f478805d447d73fadb02d964a01a34ad7369b889fcb266ee8586e46912f
+generated: "2023-06-21T11:11:02.8101599+02:00"
