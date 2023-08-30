@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: eakte-setup
+  labels:
+    app: {{.Values.eakte.labels.app}}
+  annotations:
+    "helm.sh/hook": "post-install, post-upgrade"
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      containers:
+      - name: setup-eakte-database
+        image: "{{.Values.eakte.databaseMigration.dockerRegistry}}:{{ .Values.eakte.databaseMigration.tag }}"
+        imagePullPolicy: Always
+        env:
+        - name: JAVA_OPTS
+          value: {{.Values.eakte.databaseMigration.java.maxHeap}}
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{.Values.eakte.databaseMigration.profiles}}
+        - name: SPRING_CLOUD_CONFIG_URI
+          value: {{.Values.yuuvis.configservice.url}}
+      imagePullSecrets:
+      - name: {{.Values.eakte.image.imagePullSecret}}
+      restartPolicy: OnFailure
