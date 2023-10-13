@@ -162,7 +162,7 @@ eakte:
     instances: 1
     
   databaseMigration: 
-    dockerRegistry: docker.yuuvis.org/eakte/database-migration
+    dockerRegistry: docker.yuuvis.org/eakte/eakte-postgresql-migration
     tag: 1.6.2
     instances: 1
     profiles: eakte
