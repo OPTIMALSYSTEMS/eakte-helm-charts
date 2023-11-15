@@ -17,10 +17,10 @@ redis:
       enabled: true
       size: 512Mi
       storageClass: default
-  tolerations:
-    - key: "redis"
-      operator: "Exists"
-      effect: "NoSchedule"
+    tolerations:
+      - key: "redis"
+        operator: "Exists"
+        effect: "NoSchedule"
 postgresql:
   enabled: true
   auth:
@@ -34,10 +34,10 @@ postgresql:
       scriptsConfigMap: postgresql-initdb
     persistence:
       size: 500Mi
-  tolerations:
-    - key: "postgresql"
-      operator: "Exists"
-      effect: "NoSchedule"
+    tolerations:
+      - key: "postgresql"
+        operator: "Exists"
+        effect: "NoSchedule"
 yuuvis:
   namespace: yuuvis
   api:
