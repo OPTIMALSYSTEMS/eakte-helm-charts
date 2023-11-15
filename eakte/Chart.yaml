@@ -8,9 +8,12 @@ dependencies:
 - name: redis
   version: ^16.12.2
   repository: https://charts.bitnami.com/bitnami
+  condition: redis.enabled
 - name: nginx
   version: ^13.2.2
   repository: https://charts.bitnami.com/bitnami
+  condition: nginx.enabled
 - name: postgresql
   version: ^11.6.7
   repository: https://charts.bitnami.com/bitnami
+  condition: postgresql.enabled

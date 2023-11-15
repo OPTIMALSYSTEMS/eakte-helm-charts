@@ -41,5 +41,6 @@ spec:
         - containerPort: 3000
       restartPolicy: Always
       automountServiceAccountToken: false
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret}}
