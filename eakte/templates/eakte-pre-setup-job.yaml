@@ -56,5 +56,6 @@ spec:
               key: AMQP_PASSWORD
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret}}
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       serviceAccount: copy-selfsigned-cert
       restartPolicy: OnFailure

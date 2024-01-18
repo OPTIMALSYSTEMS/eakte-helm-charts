@@ -24,4 +24,5 @@ spec:
           protocol: TCP
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret }}
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       restartPolicy: Always

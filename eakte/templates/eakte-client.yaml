@@ -22,6 +22,7 @@ spec:
         ports:
         - containerPort: 80
           protocol: TCP
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret }}
       restartPolicy: Always

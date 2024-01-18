@@ -151,7 +151,35 @@ momentum:
 eakte:
   db:
     password: changeme
+
+
+Mögliche Variablen sind:
+  
+```yml
+momentum:
+  service-user:
+    name: service_user
+    password: Serv1ceUser1!
+    tenant: servicestenant
+  admin-role: "EAKTE_ADMIN"
+  service-role: "EAKTE_SERVICE"
+  system-integrator-role: "YUUVIS_SYSTEM_INTEGRATOR"
+  audit-api-url: "http://audit.yuuvis/api"
+  office-api-url: "http://connector.embeddedoffice/api"
+  api-url: "http://api.yuuvis/api"
+  internal-api-url: "http://authentication-internal.yuuvis/api"
+eakte:
+  redis:
+      host: ${eakte.redis.url:redis-master.eakte}
+      port: ${eakte.redis.port:6379}
+  db:
+    password: changeme
+    url: postgresql://eakte-postgresql.eakte:5432/eakte
+    username: eakte
+  elasticsearch:
+    url: http://elasticsearch.infrastructure:9200
 ```
+
 8. Nach dem Speichern müssen der config und authentication neugestartet werden:
 ```bash
 kubectl -n yuuvis rollout restart sts configservice
