@@ -4,7 +4,7 @@
 
 - [Helm](https://helm.sh/docs/intro/install/)
 - [Kubernetes](https://kubernetes.io/docs/setup/)
-- Yuuvis Momentum in der Version Autumn 2023
+- Yuuvis Momentum in der Version 2023winter
 
 ## E-Akte Installation
 
