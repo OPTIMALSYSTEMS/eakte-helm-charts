@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: setup-eakte-database
-        image: "{{.Values.eakte.databaseMigration.dockerRegistry}}:{{ .Values.eakte.databaseMigration.tag }}"
+        image: "{{.Values.eakte.databaseMigration.dockerRegistry}}:{{ default .Chart.AppVersion .Values.eakte.databaseMigration.tag }}"
         imagePullPolicy: Always
         env:
         - name: JAVA_OPTS
@@ -22,6 +22,7 @@ spec:
           value: {{.Values.eakte.databaseMigration.profiles}}
         - name: SPRING_CLOUD_CONFIG_URI
           value: {{.Values.yuuvis.configservice.url}}
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret}}
       restartPolicy: OnFailure
