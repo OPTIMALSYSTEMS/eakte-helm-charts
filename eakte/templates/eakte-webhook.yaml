@@ -22,7 +22,7 @@ spec:
         imagePullPolicy: IfNotPresent
       containers:
       - name: eakte-webhook
-        image: "{{.Values.eakte.webhook.dockerRegistry}}:{{ .Values.eakte.webhook.tag }}"
+        image: "{{.Values.eakte.webhook.dockerRegistry}}:{{ default .Chart.AppVersion .Values.eakte.webhook.tag }}"
         imagePullPolicy: {{ .Values.eakte.image.imagePullPolicy }}
         livenessProbe:
           httpGet:
@@ -68,5 +68,6 @@ spec:
     {{- end}}
       restartPolicy: Always
       automountServiceAccountToken: false
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret}}
