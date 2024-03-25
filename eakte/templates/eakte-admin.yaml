@@ -22,7 +22,7 @@ spec:
         imagePullPolicy: IfNotPresent
       containers:
       - name: eakte-admin
-        image: "{{.Values.eakte.admin.dockerRegistry}}:{{ .Values.eakte.admin.tag }}"
+        image: "{{.Values.eakte.admin.dockerRegistry}}:{{ default .Chart.AppVersion .Values.eakte.admin.tag }}"
         imagePullPolicy: {{ .Values.eakte.image.imagePullPolicy }}
 #        livenessProbe:
 #          httpGet:
@@ -41,5 +41,6 @@ spec:
         - containerPort: 3000
       restartPolicy: Always
       automountServiceAccountToken: false
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret}}
