@@ -79,6 +79,15 @@ Das Profil ist hier dokumentiert [https://help.optimal-systems.com/yuuvis\_devel
 
 ## E-Akte App in Momentum installieren
 
+Die Version 1.9.0 der Eakte wurde mit Yuuvis Momentum 2023winter getestet in Verbindung mit den folgenden Infrastrukturkomponenten:
+- "elasticsearch:2022-08-01"
+- "redis:7.0.5-debian-11-r3"
+- "postgresql:11.17.0-debian-11-r23"
+- "rabbitmq:3.10.8-debian-11-r4"
+- "minio:RELEASE.2021-02-14T04-01-33Z"
+- "gitea:1.16.8"
+- "keycloak:22.0.1-stable1"
+
 **Konfiguration und Service Account für die E-Akte anlegen**
 
 Der authentication-internal Service muss in Kubernetes im Namespace yuuvis erstellt sein. Dies ist der Standard in Yuuvis ab der Spring 2023 Version.
@@ -151,7 +160,35 @@ momentum:
 eakte:
   db:
     password: changeme
+
+
+Mögliche Variablen sind:
+  
+```yml
+momentum:
+  service-user:
+    name: service_user
+    password: Serv1ceUser1!
+    tenant: servicestenant
+  admin-role: "EAKTE_ADMIN"
+  service-role: "EAKTE_SERVICE"
+  system-integrator-role: "YUUVIS_SYSTEM_INTEGRATOR"
+  audit-api-url: "http://audit.yuuvis/api"
+  office-api-url: "http://connector.embeddedoffice/api"
+  api-url: "http://api.yuuvis/api"
+  internal-api-url: "http://authentication-internal.yuuvis/api"
+eakte:
+  redis:
+      host: ${eakte.redis.url:redis-master.eakte}
+      port: ${eakte.redis.port:6379}
+  db:
+    password: changeme
+    url: postgresql://eakte-postgresql.eakte:5432/eakte
+    username: eakte
+  elasticsearch:
+    url: http://elasticsearch.infrastructure:9200
 ```
+
 8. Nach dem Speichern müssen der config und authentication neugestartet werden:
 ```bash
 kubectl -n yuuvis rollout restart sts configservice

@@ -16,12 +16,13 @@ spec:
         name: eakte-client
     spec:
       containers:
-      - image: "{{.Values.eakte.client.dockerRegistry}}:{{ .Values.eakte.client.tag }}"
+      - image: "{{.Values.eakte.client.dockerRegistry}}:{{ default .Chart.AppVersion .Values.eakte.client.tag }}"
         imagePullPolicy: {{ .Values.eakte.image.imagePullPolicy }}
         name: eakte-client
         ports:
         - containerPort: 80
           protocol: TCP
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret }}
       restartPolicy: Always
