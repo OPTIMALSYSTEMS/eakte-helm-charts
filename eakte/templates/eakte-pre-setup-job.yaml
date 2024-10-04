@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: setup-eakte
-        image: "{{.Values.eakte.schema.dockerRegistry}}:{{ .Values.eakte.schema.tag }}"
+        image: "{{.Values.eakte.schema.dockerRegistry}}:{{ default .Chart.AppVersion .Values.eakte.schema.tag }}"
         imagePullPolicy: Always
         env:
         - name: YUUVIS_NAMESPACE
@@ -56,5 +56,6 @@ spec:
               key: AMQP_PASSWORD
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret}}
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       serviceAccount: copy-selfsigned-cert
       restartPolicy: OnFailure

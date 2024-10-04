@@ -22,7 +22,7 @@ spec:
         imagePullPolicy: IfNotPresent
       containers:
       - name: eakte-api
-        image: "{{.Values.eakte.api.dockerRegistry}}:{{ .Values.eakte.api.tag }}"
+        image: "{{.Values.eakte.api.dockerRegistry}}:{{ default .Chart.AppVersion .Values.eakte.api.tag }}"
         imagePullPolicy: {{ .Values.eakte.image.imagePullPolicy }}
         livenessProbe:
           httpGet:
@@ -64,5 +64,6 @@ spec:
     {{- end}}
       restartPolicy: Always
       automountServiceAccountToken: false
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret}}
