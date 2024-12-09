@@ -16,7 +16,7 @@ spec:
         name: eakte-fileplan-importer
     spec:
       containers:
-      - image: "{{.Values.eakte.filePlanImporter.dockerRegistry}}:{{ .Values.eakte.filePlanImporter.tag }}"
+      - image: "{{.Values.eakte.filePlanImporter.dockerRegistry}}:{{ default .Chart.AppVersion .Values.eakte.filePlanImporter.tag }}"
         imagePullPolicy: {{ .Values.eakte.image.imagePullPolicy }}
         name: eakte-fileplan-importer
         ports:
@@ -24,4 +24,6 @@ spec:
           protocol: TCP
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret }}
+      affinity: {{ .Values.eakte.affinity | toYaml | nindent 8 }}
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       restartPolicy: Always
