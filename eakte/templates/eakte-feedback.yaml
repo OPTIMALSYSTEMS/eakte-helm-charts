@@ -16,7 +16,7 @@ spec:
         name: eakte-feedback
     spec:
       containers:
-      - image: "{{.Values.eakte.feedback.dockerRegistry}}:{{ .Values.eakte.feedback.tag }}"
+      - image: "{{.Values.eakte.feedback.dockerRegistry}}:{{ default .Chart.AppVersion .Values.eakte.feedback.tag }}"
         imagePullPolicy: {{ .Values.eakte.image.imagePullPolicy }}
         name: eakte-feedback
         env:
@@ -54,5 +54,7 @@ spec:
           periodSeconds: 30
       imagePullSecrets:
       - name: {{.Values.eakte.image.imagePullSecret }}
+      affinity: {{ .Values.eakte.affinity | toYaml | nindent 8 }}
+      tolerations: {{ .Values.eakte.tolerations | toYaml | nindent 8 }}
       restartPolicy: Always
 
